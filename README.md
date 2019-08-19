@@ -1,4 +1,4 @@
-# Pursuit-Core-MVC+Delgation-Review-Lab
+# Pursuit-Core-MVC+Delegation-Review-Lab
 
 ![gif](SettingsFontChangingVideo.gif)
 
