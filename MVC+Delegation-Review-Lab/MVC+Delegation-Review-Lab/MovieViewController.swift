@@ -8,14 +8,14 @@
 
 import UIKit
 
-class MovieViewController: UIViewController {
+class MovieViewController: UIViewController, FontSize {
     
     @IBOutlet weak var tableView: UITableView!
     
-    var movies = Movie.allMovies
+    var movies = [Movie]()
+ 
     
-    
-    var fontSizes = 13 {
+    var fontSizes = 13.0 {
         didSet {
             tableView.reloadData()
         }
@@ -24,16 +24,44 @@ class MovieViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
+        tableView.delegate = self
+        loadItems()
     
     }
+    
+    private func loadItems() {
+        movies = Movie.allMovies
+     }
+    
     @IBAction func settings(segue: UIStoryboardSegue) {
         guard let createMovieController = segue.source as? FontChangeViewController else {
             fatalError("failed to access FontChangeViewController")
         }
-        fontSizes = Int(createMovieController.fontSize)
+        fontSizes = Double(createMovieController.fontSize)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let createMovieController = segue.destination as? FontChangeViewController else {
+            fatalError("failed to access FontChangeViewController")
+        }
+        createMovieController.delegate = self
+    }
+    
+    func changeFontSize(_ size: CGFloat) {
+        self.fontSizes = Double(size)
+    }
+    
+    
+    private func showFontChangeVC(_ movie: Movie? = nil) {
+        guard let fontChangeViewController = storyboard?.instantiateViewController(identifier: "FontChangeViewController") as? FontChangeViewController else {
+            fatalError("Could not downcast to FontChangeViewController")
+        }
+        fontChangeViewController.movie = movie
+        present(fontChangeViewController, animated: true)
     }
 
 }
+ 
 
 
 
@@ -55,4 +83,12 @@ extension MovieViewController: UITableViewDataSource {
         return cell
     }
 }
+
+extension MovieViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = movies[indexPath.row]
+        showFontChangeVC(movie)
+    }
+}
+
 

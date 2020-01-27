@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol FontSize: AnyObject {
+    func changeFontSize(_ size: CGFloat)
+}
+
 class FontChangeViewController: UIViewController {
     
     @IBOutlet weak var headerLabel: UILabel!
@@ -17,11 +21,12 @@ class FontChangeViewController: UIViewController {
    
     
     var movie: Movie?
-    
+    weak var delegate: FontSize?
     
     var fontSize: CGFloat = 13.0 {
         didSet {
         fontChangeLabel.text = "Preview font size: \(fontSize)"
+            delegate?.changeFontSize(fontSize)
         }
     }
    
